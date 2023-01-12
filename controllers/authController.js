@@ -31,7 +31,7 @@ const user_login_post = (req, res) => {
 
 
     MongoClient.connect(DBURI, function(err, db) {
-    if (err) throw err;
+    if (err) res.redirect('/login');
         console.log('connected again')
     var dbo = db.db("quick-share");
     dbo.collection("users").findOne({email: req.body.email, password: req.body.password}, function(err, result) {
@@ -39,6 +39,8 @@ const user_login_post = (req, res) => {
         console.log(result);
         db.close();
     });
+
+    res.redirect('/');
 });
 
 
