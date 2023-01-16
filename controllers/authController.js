@@ -12,6 +12,8 @@ const user_create_get = (req, res) => {
 
 const user_create_post = (req, res) => {
 
+    console.log(req.body)
+
     const user = new User({
         name: req.body.user_name,
         email: req.body.email,
@@ -22,7 +24,7 @@ const user_create_post = (req, res) => {
         .then(() => {
             res.redirect('/login');
         })
-        .catch((err) => res.send('error :('));
+        .catch((err) => console.log(err));
 }
 
 const user_login_post = (req, res) => {
