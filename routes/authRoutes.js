@@ -3,8 +3,6 @@
 
 // const router = express.Router();
 
-// router.get('/login', authController.user_login_get);
-
 // router.get('/register', authController.user_create_get);
 
 // router.post('/user/create', authController.user_create_post);
@@ -14,6 +12,17 @@
 // module.exports = router;
 
 module.exports = function(app,passport){
+
+    app.get('/login', (req, res) => {
+        res.render('auth/login');
+    });
+
+    app.post('/user/login', passport.authenticate('yousef', {
+        successRedirect: '/',
+        failureRedirect: '/login',
+    }), () => {
+        console.log('post')
+    });
 
     app.get('/',isLoggedIn,(req,res)=>{
         console.log("req user",req.user);

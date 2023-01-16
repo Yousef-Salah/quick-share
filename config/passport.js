@@ -63,4 +63,22 @@ module.exports = (passport) => {
         });
 
     }));
+
+    passport.use('yousef', new LocalStrategy( {
+        usernameField: 'email', 
+        passwordField: 'password',
+        
+    },(email, password, done) => {
+        console.log('local')
+            User.findOne({ 'email' : email }, (err, user) => {
+                console.log('1')
+                if(err) return done(err);
+                console.log('2')
+                if(!user) return done(null, false, "Invalid Email Address!! :(");
+                console.log('3')
+                if(!user.validPassword(password)) return done(null, false, "Incorrect password");
+                console.log('logged in ');
+                return done(null, user);
+            });
+    }));
 }
