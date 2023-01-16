@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const DBURI = require('../config');
+const bcrypt = require('bcrypt');
 
 
 const user_login_get = (req, res) => {
@@ -32,18 +33,21 @@ const user_login_post = (req, res) => {
     const MongoClient = require('mongodb').MongoClient;
 
 
-    MongoClient.connect(DBURI, function(err, db) {
-    if (err) res.redirect('/login');
-        console.log('connected again')
-    var dbo = db.db("quick-share");
-    dbo.collection("users").findOne({email: req.body.email, password: req.body.password}, function(err, result) {
-        if (err) throw err;
-        console.log(result);
-        db.close();
-    });
+    MongoClient.connect(DBURI, (err, db) => {
+        if (err) res.redirect('/login');
+            console.log('connected again')
+        var dbo = db.db("quick-share");
+        dbo.collection("users").findOne({ email: req.body.email }, (err, result) => {
+            if (err) throw err;
+            if(!result) return res.redirect('/login');
+            db.close();
 
-    res.redirect('/');
-});
+            bcrypt.compare(req.body.password, result.password, (err, isMatch) => {
+                if (err) throw err;
+                if (!isMatch) return res.redirect('/login');            
+                return res.redirect('/');
+        });
+    })});
 
 
 
