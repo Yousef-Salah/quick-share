@@ -34,6 +34,3 @@ require('./config/passport')(passport);
 require('./routes/authRoutes')(app,passport);
     
 
-app.get('/', (req, res) => {
-    res.render('layouts/test');
-});

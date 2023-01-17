@@ -17,7 +17,7 @@ module.exports = function(app,passport){
         res.render('auth/login');
     });
 
-    app.post('/user/login', passport.authenticate('yousef', {
+    app.post('/user/login', passport.authenticate('loacl-login', {
         successRedirect: '/',
         failureRedirect: '/login',
     }), () => {
@@ -25,7 +25,6 @@ module.exports = function(app,passport){
     });
 
     app.get('/',isLoggedIn,(req,res)=>{
-        console.log("req user",req.user);
         res.render('layouts/test',{
             user : req.user
         });
@@ -38,12 +37,15 @@ module.exports = function(app,passport){
     app.post('/signup', passport.authenticate('local-signup', {
         successRedirect : '/', // redirect to the secure profile section
         failureRedirect : '/signup', // redirect back to the signup page if there is an error
-        failureFlash : true // allow flash messages
+        failureFlash : true, // allow flash messages
+        session: false
     }));
 
-    app.get('/logout', function(req, res) {
-        req.logout();
-        res.redirect('/');
+    app.post('/logout', (req, res) => {
+        req.logout(err => {
+            if(err) throw err;
+            res.redirect('/');
+        });
     });
 
 
